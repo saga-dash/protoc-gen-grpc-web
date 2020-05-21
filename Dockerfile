@@ -46,6 +46,6 @@ RUN apt-get install curl && \
 RUN cp /protoc-gen-grpc-web /usr/local/bin/protoc-gen-grpc-web
 
 RUN npm i yarn
-RUN yarn global add grpc-tools grpc_tools_node_protoc_ts
+RUN yarn global add grpc-tools@1.8.1 grpc_tools_node_protoc_ts@3.0.0
 
 ENTRYPOINT ["/usr/local/bin/grpc_tools_node_protoc", "-I/protobuf"]
