@@ -35,6 +35,7 @@ jobs:
         SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
         SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
         SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        SHA7: ${{ steps.branch_name.outputs.SHA7 }}
     - run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
     - run: docker build -t src .
