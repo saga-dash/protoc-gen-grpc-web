@@ -1,0 +1,44 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - '*'
+  pull_request:
+    branches:
+    - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build base image
+      run: |
+        echo $SOURCE_NAME
+        echo $SOURCE_BRANCH
+        echo $SOURCE_TAG
+      env:
+        SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+        SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+        SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+    - run: docker build -t src .
+    - name: Push Latest
+      run: |
+        docker tag src ghcr.io/saga-dash/protoc-gen-grpc-web:latest
+        docker push ghcr.io/saga-dash/protoc-gen-grpc-web:latest
+    - name: Push SHA
+      run: |
+        docker tag src ghcr.io/saga-dash/protoc-gen-grpc-web:$GITHUB_SHA
+        docker push ghcr.io/saga-dash/protoc-gen-grpc-web:$GITHUB_SHA
+    - name: Push Tag
+      run: |
+        docker tag src ghcr.io/saga-dash/protoc-gen-grpc-web:$SOURCE_TAG
+        docker push ghcr.io/saga-dash/protoc-gen-grpc-web:$SOURCE_TAG
+      if: startsWith(github.ref, 'refs/tags/')
+
